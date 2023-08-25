@@ -25,8 +25,9 @@ export class Chat {
 
   @SubscribeMessage('sendRoom')
   handleSendRoom(@MessageBody() data: any): void {
+    this.logger.verbose(JSON.stringify(data));
     const { room, message } = data;
-    this.server.to(room).emit(message);
+    this.server.to(room).emit('roomReceive', message);
   }
 
 }
