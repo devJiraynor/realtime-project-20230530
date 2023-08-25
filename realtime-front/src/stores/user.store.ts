@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { v4 as uuid } from 'uuid';
 
 interface User {
   id: string;
@@ -7,7 +8,9 @@ interface User {
 }
 
 const useUserStore = create<User>(set => ({
-  id: '',
+  id: uuid(),
   nickname: '',
-  setNickname: (nickname: string) => {}
+  setNickname: (nickname: string) => set(state => ({ ...state, nickname })),
 }));
+
+export default useUserStore;
