@@ -31,8 +31,13 @@
 }
 
 .room-container {
-  height: 80vh;
+  padding: 1vh;
+  height: 78vh;
   overflow-y: scroll;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .room-footer {
@@ -70,4 +75,69 @@
 .room-send-button:hover {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.6);
+}
+
+.message-box-mine {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.message-mine {
+  border-radius: 4px;
+  padding: 8px;
+
+  max-width: 30vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(250, 250, 0, 0.7);
+
+  font-weight: 500;
+}
+
+.message-datetime {
+  margin: 0 4px;
+  display: flex;
+  flex-direction: column-reverse;
+
+  font-size: 12px;
+}
+
+.message-box-others {
+  display: flex;
+}
+
+.message-box-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.message-nickname {
+  color: rgba(0, 0, 0, 0.6);
+
+  font-size: 14px;
+}
+
+.message-container-others {
+  display: flex;
+}
+
+.message-other {
+  border-radius: 4px;
+  padding: 8px;
+
+  max-width: 30vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.4);
+
+  color: rgba(255, 255, 255, 1);
+
+  font-weight: 500;
 }

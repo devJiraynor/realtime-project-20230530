@@ -10,6 +10,9 @@ export default function Room() {
 
   //          state: Send Button Ref 상태          //
   const sendButtonRef = useRef<HTMLDivElement | null>(null);
+  //          state: Room Container Ref 상태          //
+  const roomContainerRef = useRef<HTMLDivElement | null>(null);
+  
   //          state: path 상태 변경 함수          //
   const { setPath } = usePathStore();
   //          state: room 상태 및 변경 함수          //
@@ -41,6 +44,7 @@ export default function Room() {
   }
   //          event handler: 전송 버튼 클릭 처리          //
   const onSendButtonClickHandler = () => {
+    if (!message.trim()) return;
     const datetime = moment().format('YYYY-MM-DD hh:mm:ss a');
     const data: MessageDto = { id, room, nickname, message, datetime };
     socket.emit('send', data);
@@ -53,6 +57,34 @@ export default function Room() {
     setMessageList(newMessageList);
   }
   socket.on('receive', onReceiveHandler);
+
+  //          component: 채팅 메세지 아이템 컴포넌트          //
+  interface ChatMessageItemProps {
+    messageItem: MessageDto;
+  }
+  const ChatMessageItem = ({ messageItem }: ChatMessageItemProps) => {
+    const { nickname, message, datetime } = messageItem;
+
+    if (id === messageItem.id)
+    return (
+      <div className='message-box-mine'>
+        <div className='message-mine'>{message}</div>
+        <div className='message-datetime'>{datetime}</div>
+      </div>
+    );
+
+    return (
+      <div className='message-box-others'>
+        <div className='message-box-wrapper'>
+          <div className='message-nickname'>{nickname}</div>
+          <div className='message-container-others'>
+            <div className='message-other'>{message}</div>
+            <div className='message-datetime'>{datetime}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   //          effect: 첫 마운트 시 소켓 연결          //
   let effectFlag = true;
@@ -75,6 +107,11 @@ export default function Room() {
     socket.emit('join', room);
   }, []);
 
+  useEffect(() => {
+    if(!roomContainerRef.current) return;
+    roomContainerRef.current.scrollTop = roomContainerRef.current.scrollHeight;
+  }, [messageList]);
+
   //          render: 채팅방 컴포넌트 render          //
   return (
     <div id='room'>
@@ -82,8 +119,8 @@ export default function Room() {
         <div className='room-number'>{room}</div>
         <div className='room-back-button' onClick={onBackButtonClickHandler}>뒤로가기</div>
       </div>
-      <div className='room-container'>
-        { messageList.map(messageItem => <div>{`${messageItem.id} ${messageItem.message}`}</div>) }
+      <div ref={roomContainerRef} className='room-container'>
+        { messageList.map(messageItem => <ChatMessageItem messageItem={messageItem} />) }
       </div>
       <div className='room-footer'>
         <input className='room-send-input' type='text' value={message} onChange={onMessageChangeHandler} onKeyDown={onEnterKeyDownHandler} />
